@@ -6,7 +6,7 @@ import os
 
 url = 'https://embracedata.inpe.br/magnetometer/CXP/2022/'
 # by month
-exts = ['jun.22m', 'jul.22m']
+exts = ['may.22m', 'jun.22m', 'jul.22m']
 
 data_dir = os.getcwd() + '/data/magnetometer/'
 os.makedirs(data_dir, exist_ok=True)
