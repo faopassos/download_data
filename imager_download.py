@@ -6,7 +6,7 @@ import wget
 import os
 
 
-stn = 'SMS'
+stn = 'BJL'
 year = '2022'
 month = '03'
 day = '15'
