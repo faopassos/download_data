@@ -1,11 +1,7 @@
 #!/usr/bin/python3
 
 from bs4 import BeautifulSoup
-import requests
-import wget
-import os
-import urllib.request
-import urllib.error
+import requests, wget, os, urllib.request, urllib.error
 
 
 stn = 'BV'
@@ -15,8 +11,8 @@ day = '15'
 filters = ['OH-DARK', 'O6-DARK', 'O5-DARK']
 
 uri = 'https://embracedata.inpe.br/imager/'
-uri_dir = stn + '/' + year + '/' + stn + '_' + year + '_' + month + day
-url = uri + uri_dir + '/'
+uri_dir = stn + '/' + year + '/' + stn + '_' + year + '_' + month + day  + '/'
+url = uri + uri_dir
 
 def checkURL(url, message):
   try:
