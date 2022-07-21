@@ -2,6 +2,7 @@
 import urllib.request
 import urllib.error
 
+
 def checkURL(url, message):
     try:
         urllib.request.urlretrieve(url)
