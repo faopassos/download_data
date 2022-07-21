@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests, wget, os, urllib.request, urllib.error
 
 
-stn = 'BV'
+stn = 'CP'
 year = '2015'
 month = '03'
 day = '15'
