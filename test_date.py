@@ -1,12 +1,14 @@
 #!/usr/bin/python3
-
 import pandas as pd
-#from datetime import datetime
 
+#YYYY-MM-DD
+start_date = '2020-02-01'
+end_date = '2020-02-03'
+range_date = pd.date_range(start=start_date, end=end_date)
 
-date_range = pd.date_range(start="2020-02-01",end="2020-02-03")
+#print(range_date)
+stn = 'CP'
+uri = 'https://embracedata.inpe.br/imager/'
 
-print(date_range)
-
-for day in date_range:
-  print(day.strftime("dddSS%Y%m%d"))
+for day in range_date:
+  print(uri + day.strftime(f'{stn}/%Y/{stn}_%Y_%m%d/'))
