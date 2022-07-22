@@ -1,25 +1,37 @@
 #!/usr/bin/python3
 
 from bs4 import BeautifulSoup
-import requests, wget, os, urllib.request, urllib.error
+import pandas as pd
+import requests, wget, os, urllib.request, urllib.error, logging
 
 
 stn = 'CP'
-year = '2015'
-month = '03'
-day = '15'
+start_date = '2021-01-01'
+end_date = '2021-01-02'
 filters = ['OH-DARK', 'O6-DARK', 'O5-DARK']
 
-uri = 'https://embracedata.inpe.br/imager/'
-uri_dir = stn + '/' + year + '/' + stn + '_' + year + '_' + month + day  + '/'
-url = uri + uri_dir
+url = 'https://embracedata.inpe.br/imager/'
+
+
+logging.basicConfig(
+  filename = 'imager_download.log',
+  format='%(asctime)s,%(levelname)s - %(message)s',
+  datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
+)
+
 
 def checkURL(url, message):
   try:
     urllib.request.urlretrieve(url)
   except urllib.error.HTTPError as err:
-      print(f'{err} - {message}: {url}')
+      logging.info(f'{err} - {message}: "{url}"')
       exit()
+
+
+def returnRangeOfDates(start_date, end_date, stn):
+  range_date = pd.date_range(start=start_date, end=end_date)
+  full_uri = range_date.strftime(f'{stn}/%Y/{stn}_%Y_%m%d/')
+  return full_uri
 
 
 def makeDir(path):
@@ -34,16 +46,17 @@ def listFD(url, ft_len, ft=''):
 
 
 if __name__ == '__main__':
-  error_message = 'No data from this date or invalid date/stn'
-  checkURL(url, error_message)
+  range_date = returnRangeOfDates(start_date, end_date, stn)
+  for day in range_date:
+    error_message = 'No data from this date or invalid input date/stn'
+    checkURL(url + day, error_message)
 
-  data_dir = 'imager' + '/' + uri_dir
-  makeDir(data_dir)
+    data_dir = 'imager' + '/' + day
+    makeDir(data_dir)
 
-  for ft in filters:
-    if listFD(url, len(ft), ft) == []:
-      print(f'\nNo file match with filter "{ft}"')
-    else:
-      for file in listFD(url, len(ft), ft):
-        print(f'\n{file}')
-        wget.download(file, 'data/' + data_dir)
+    for ft in filters:
+      if listFD(url + day, len(ft), ft) == []:
+        logging.info(f'No file match with filter "{ft}" for date "{day}"')
+      else:
+        for file in listFD(url + day, len(ft), ft):
+          logging.info(wget.download(file, 'data/' + data_dir))
