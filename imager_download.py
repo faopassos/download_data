@@ -8,8 +8,8 @@ import urllib.request
 import urllib.error
 
 
-stn = 'BV'
-year = '2015'
+stn = 'SMS'
+year = '2022'
 month = '03'
 day = '15'
 uri = 'https://embracedata.inpe.br/imager/'
