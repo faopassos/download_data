@@ -48,7 +48,7 @@ def listFD(url, ft_len, ft=''):
 if __name__ == '__main__':
   range_date = returnRangeOfDates(start_date, end_date, stn)
   for day in range_date:
-    error_message = 'No data from this date or invalid input date/stn'
+    error_message = 'No data from this date or invalid input stn/date'
     checkURL(url + day, error_message)
 
     data_dir = 'imager' + '/' + day
@@ -56,7 +56,8 @@ if __name__ == '__main__':
 
     for ft in filters:
       if listFD(url + day, len(ft), ft) == []:
-        logging.info(f'No file match with filter "{ft}" for date "{day}"')
+        logging.info(f'No file match with filter "{ft}" for stn/date "{day}"')
       else:
         for file in listFD(url + day, len(ft), ft):
-          logging.info(wget.download(file, 'data/' + data_dir))
+          logging.info(file)
+          wget.download(file, 'data/' + data_dir)
