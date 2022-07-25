@@ -45,7 +45,7 @@ def listFD(url, ft_len, ft=''):
   return [url + node.get('href') for node in soup.find_all('a') if node.get('href').startswith(ft, 0, ft_len)]
 
 
-if __name__ == '__main__':
+def downloadFiles():
   range_date = returnRangeOfDates(start_date, end_date, stn)
   for day in range_date:
     error_message = 'No data from this date or invalid input stn/date'
@@ -61,3 +61,7 @@ if __name__ == '__main__':
         for file in listFD(url + day, len(ft), ft):
           logging.info(file)
           wget.download(file, 'data/' + data_dir)
+
+
+if __name__ == '__main__':
+  downloadFiles()

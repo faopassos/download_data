@@ -6,15 +6,15 @@ import requests, wget, os, urllib.request, urllib.error, logging, datetime
 
 
 stn = 'CAJ2M'
-start_date = '2021-01-01'
-end_date = '2021-01-02'
-extensions = ['.SAO', '.RSF', '.TEST']
+start_date = '2022-01-03'
+end_date = '2022-01-03'
+extensions = ['.SAO', '.TEST']
 
 url = 'https://embracedata.inpe.br/ionosonde/'
 
 
 logging.basicConfig(
-  filename = 'ionossonde_download.log',
+  filename = 'ionosonde_download.log',
   format='%(asctime)s,%(levelname)s - %(message)s',
   datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
 )
@@ -45,7 +45,7 @@ def listFD(url, ext=''):
   return [url + node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
 
 
-if __name__ == '__main__':
+def downloadFiles():
   range_date = returnRangeOfDates(start_date, end_date, stn)
   for day in range_date:
     error_message = 'No data from this date or invalid input stn/date'
@@ -60,4 +60,8 @@ if __name__ == '__main__':
       else:
         for file in listFD(url + day, ext):
           logging.info(file)
-          #wget.download(file, 'data/' + data_dir)
+          wget.download(file, 'data/' + data_dir)
+
+
+if __name__ == '__main__':
+  downloadFiles()
