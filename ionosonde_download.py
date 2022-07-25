@@ -19,7 +19,6 @@ logging.basicConfig(
   datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
 )
 
-
 def checkURL(url, message):
   try:
     urllib.request.urlretrieve(url)
@@ -51,12 +50,12 @@ def downloadFiles():
     error_message = 'No data from this date or invalid input stn/date'
     checkURL(url + day, error_message)
 
-    data_dir = 'ionossonde' + '/' + day
+    data_dir = f'ionossonde/{day}'
     makeDir(data_dir)
 
     for ext in extensions:
       if listFD(url + day, ext) == []:
-        logging.info(f'No file match with filter "{ext}" for stn/date "{day}"')
+        logging.info(f'No file match with extension "{ext}" for stn/date "{day}"')
       else:
         for file in listFD(url + day, ext):
           logging.info(file)

@@ -19,7 +19,6 @@ logging.basicConfig(
   datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
 )
 
-
 def checkURL(url, message):
   try:
     urllib.request.urlretrieve(url)
@@ -51,7 +50,7 @@ def downloadFiles():
     error_message = 'No data from this date or invalid input stn/date'
     checkURL(url + day, error_message)
 
-    data_dir = 'imager' + '/' + day
+    data_dir = f'imager/{day}'
     makeDir(data_dir)
 
     for ft in filters:
