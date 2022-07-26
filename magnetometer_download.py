@@ -5,9 +5,9 @@ import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-stn = 'EUS'
-start_date = '2013-06'
-end_date = '2013-07'
+stn = 'SMS'
+start_date = '2021-01-01'
+end_date = '2021-02-28'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 
@@ -26,8 +26,8 @@ def checkURL(url, message):
 
 
 def returnRangeOfDates(start_date, end_date):
-  range_date = pd.date_range(start=start_date, end=end_date, freq='MS')
-  full_uri = range_date.strftime('%Y%m%b')
+  range_date = pd.date_range(start=start_date, end=end_date)
+  full_uri = range_date.strftime('%Y%m%d%b')
   return full_uri.str.lower()
 
 
@@ -44,20 +44,22 @@ def listFD(url, ext=''):
 
 def downloadFiles():
   range_date = returnRangeOfDates(start_date, end_date)
-  for month in range_date:
-    year = month[0:4]
-    month_and_stn_match = f'{month[6:9]}.{month[2:4]}m' 
+  for rd in range_date:
+    year = rd[0:4]
+    month_m = f'{rd[8:11]}.{rd[2:4]}m'
+    day = rd[6:8]
     full_uri = f'{url}{stn}/{year}/'
+    files = f'{str(stn).lower()}{day}{month_m}'
+
     error_message = 'No data from this date or invalid input stn/date'
     checkURL(full_uri, error_message)
-    
-    data_dir = f'magnetometer/{stn}/{year}/'
-    makeDir(data_dir)
 
-    if listFD(full_uri, month_and_stn_match) == []:
-      logging.info(f'No file match with month "{month_and_stn_match}" for stn/date "{full_uri}"')
+    if listFD(full_uri, files) == []:
+      logging.info(f'No file match with name "{files}" for stn/date "{full_uri}"')
     else:
-      for file in listFD(full_uri, month_and_stn_match):
+      data_dir = f'magnetometer/{stn}/{year}/'
+      makeDir(data_dir)
+      for file in listFD(full_uri, files):
         logging.info(file)
         wget.download(file, 'data/' + data_dir)
 

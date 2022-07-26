@@ -50,13 +50,12 @@ def downloadFiles():
     error_message = 'No data from this date or invalid input stn/date'
     checkURL(url + day, error_message)
 
-    data_dir = f'ionossonde/{day}'
-    makeDir(data_dir)
-
     for ext in extensions:
       if listFD(url + day, ext) == []:
         logging.info(f'No file match with extension "{ext}" for stn/date "{day}"')
       else:
+        data_dir = f'ionossonde/{day}'
+        makeDir(data_dir)
         for file in listFD(url + day, ext):
           logging.info(file)
           wget.download(file, 'data/' + data_dir)

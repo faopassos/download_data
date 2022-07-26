@@ -50,13 +50,12 @@ def downloadFiles():
     error_message = 'No data from this date or invalid input stn/date'
     checkURL(url + day, error_message)
 
-    data_dir = f'imager/{day}'
-    makeDir(data_dir)
-
     for ft in filters:
       if listFD(url + day, len(ft), ft) == []:
         logging.info(f'No file match with filter "{ft}" for stn/date "{day}"')
       else:
+        data_dir = f'imager/{day}'
+        makeDir(data_dir)
         for file in listFD(url + day, len(ft), ft):
           logging.info(file)
           wget.download(file, 'data/' + data_dir)
