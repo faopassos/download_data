@@ -8,10 +8,9 @@ import requests, wget, os, urllib.request, urllib.error, logging
 stn = 'CP'
 start_date = '2021-01-01'
 end_date = '2021-01-02'
-filters = ['OH-DARK', 'O6-DARK', 'O5-DARK']
+filters = ['OH-DARK', 'O6-DARK']
 
 url = 'https://embracedata.inpe.br/imager/'
-
 
 logging.basicConfig(
   filename = 'imager_download.log',
@@ -51,14 +50,15 @@ def downloadFiles():
     checkURL(url + day, error_message)
 
     for ft in filters:
-      if listFD(url + day, len(ft), ft) == []:
-        logging.info(f'No file match with filter "{ft}" for stn/date "{day}"')
-      else:
+      files = listFD(url + day, len(ft), ft)
+      if files != []:
         data_dir = f'imager/{day}'
         makeDir(data_dir)
-        for file in listFD(url + day, len(ft), ft):
-          logging.info(file)
-          wget.download(file, 'data/' + data_dir)
+        for f in files:
+          logging.info(f)
+          wget.download(f, 'data/' + data_dir)
+      else:
+        logging.info(f'No file match with filter "{ft}" for stn/date "{day}"')
 
 
 if __name__ == '__main__':

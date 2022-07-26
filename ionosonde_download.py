@@ -2,16 +2,16 @@
 
 from bs4 import BeautifulSoup
 import pandas as pd
-import requests, wget, os, urllib.request, urllib.error, logging, datetime
+from datetime import datetime
+import requests, wget, os, urllib.request, urllib.error, logging
 
 
 stn = 'CAJ2M'
-start_date = '2022-01-03'
-end_date = '2022-01-03'
-extensions = ['.SAO', '.TEST']
+start_date = '2022-010'
+end_date = '2022-010'
+extensions = ['.SAO', '.PNG']
 
 url = 'https://embracedata.inpe.br/ionosonde/'
-
 
 logging.basicConfig(
   filename = 'ionosonde_download.log',
@@ -28,7 +28,9 @@ def checkURL(url, message):
 
 
 def returnRangeOfDates(start_date, end_date, stn):
-  range_date = pd.date_range(start=start_date, end=end_date)
+  range_s = datetime.strptime(start_date, '%Y-%j').strftime("%Y-%m-%d")
+  range_e = datetime.strptime(end_date, '%Y-%j').strftime("%Y-%m-%d")
+  range_date = pd.date_range(start=range_s, end=range_e)
   full_uri = range_date.strftime(f'{stn}/%Y/%j/')
   return full_uri
 
@@ -51,14 +53,15 @@ def downloadFiles():
     checkURL(url + day, error_message)
 
     for ext in extensions:
-      if listFD(url + day, ext) == []:
-        logging.info(f'No file match with extension "{ext}" for stn/date "{day}"')
-      else:
+      files = listFD(url + day, ext)
+      if files != []:
         data_dir = f'ionossonde/{day}'
         makeDir(data_dir)
-        for file in listFD(url + day, ext):
-          logging.info(file)
-          wget.download(file, 'data/' + data_dir)
+        for f in files:
+          logging.info(f)
+          wget.download(f, 'data/' + data_dir)  
+      else:
+        logging.info(f'No file match with extension "{ext}" for stn/date "{day}"')
 
 
 if __name__ == '__main__':
