@@ -5,9 +5,9 @@ import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-stn = 'SMS'
-start_date = '2021-01-01'
-end_date = '2021-02-28'
+stn = 'CXP'
+start_date = '2020-01-01'
+end_date = '2020-12-31'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 
@@ -49,19 +49,20 @@ def downloadFiles():
     month_m = f'{rd[8:11]}.{rd[2:4]}m'
     day = rd[6:8]
     full_uri = f'{url}{stn}/{year}/'
-    files = f'{str(stn).lower()}{day}{month_m}'
+    files_m = f'{str(stn).lower()}{day}{month_m}'
 
     error_message = 'No data from this date or invalid input stn/date'
     checkURL(full_uri, error_message)
 
-    if listFD(full_uri, files) == []:
-      logging.info(f'No file match with name "{files}" for stn/date "{full_uri}"')
-    else:
+    files = listFD(full_uri, files_m)
+    if files != []:
       data_dir = f'magnetometer/{stn}/{year}/'
       makeDir(data_dir)
-      for file in listFD(full_uri, files):
-        logging.info(file)
-        wget.download(file, 'data/' + data_dir)
+      for f in files:
+        logging.info(f)
+        wget.download(f, 'data/' + data_dir)
+    else:
+      logging.info(f'No file match with name "{files_m}" for stn/date "{full_uri}"')
 
 
 if __name__ == '__main__':
