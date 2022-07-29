@@ -6,9 +6,9 @@ import requests, wget, os, urllib.request, urllib.error, logging
 
 
 stn = 'CP'
-start_date = '2021-01-01'
-end_date = '2021-01-02'
-filters = ['OH-DARK', 'O6-DARK']
+start_date = '2022-03-01'
+end_date = '2022-03-01'
+filters = ['OH', 'O6']
 
 url = 'https://embracedata.inpe.br/imager/'
 
