@@ -2,13 +2,12 @@
 
 from bs4 import BeautifulSoup
 import pandas as pd
-from os.path import exists
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-stn = 'CXP'
+stn = 'RGA'
 start_date = '2020-01-01'
-end_date = '2020-01-10'
+end_date = '2020-01-03'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 
@@ -18,26 +17,26 @@ logging.basicConfig(
   datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
 )
 
-def checkURL(url, message):
+def checkURL(url):
   try:
     urllib.request.urlretrieve(url)
   except urllib.error.HTTPError as err:
-      logging.info(f'{err} - {message}: "{url}"')
-      exit()
+    message = 'No data from this date or invalid input stn/date'
+    logging.info(f'{err} - {message}: "{url}"')
+    exit()
 
 
 def returnRangeOfDates(start_date, end_date):
-  range_date = pd.date_range(start=start_date, end=end_date)
-  full_uri = range_date.strftime('%Y%m%d%b')
-  return full_uri.str.lower()
+  try:
+    dataset = pd.date_range(start=start_date, end=end_date)
+    dataset_formated = dataset.strftime('%Y%m%d%b')
+    return dataset_formated.str.lower()
+  except:
+    logging.info(f'Invalid date/range of dates!\n\nYour entry dates:\n{start_date}\n{end_date}')
+    exit()
 
 
-def makeDir(path):
-  base_dir = os.getcwd()
-  os.makedirs(base_dir + '/data/' + path, exist_ok=True)
-
-
-def listFD(url, ext=''):
+def listOfFiles(url, ext=''):
   page = requests.get(url).text
   soup = BeautifulSoup(page, 'html.parser')
   return [url + node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
@@ -47,27 +46,23 @@ def downloadFiles():
   range_date = returnRangeOfDates(start_date, end_date)
   for rd in range_date:
     year = rd[0:4]
-    month_m = f'{rd[8:11]}.{rd[2:4]}m'
-    day = rd[6:8]
-    full_uri = f'{url}{stn}/{year}/'
-    files_m = f'{str(stn).lower()}{day}{month_m}'
+    full_url = f'{url}{stn}/{year}/'
+    checkURL(full_url)
+    
+    file_match = f'{str(stn).lower()}{rd[6:8]}{rd[8:11]}.{rd[2:4]}m'
+    local_file_path = f'{os.getcwd()}/data/magnetometer/{stn}/{year}/'
 
-    error_message = 'No data from this date or invalid input stn/date'
-    checkURL(full_uri, error_message)
-
-    full_file_path = f'{os.getcwd()}/data/magnetometer/{stn}/{year}/{files_m}'
-    if not exists(full_file_path):
-      files = listFD(full_uri, files_m)
+    if not os.path.exists(local_file_path + file_match):
+      files = listOfFiles(full_url, file_match)
       if files != []:
-        data_dir = f'magnetometer/{stn}/{year}/'
-        makeDir(data_dir)
-        for f in files:
-          logging.info(f'downloading file {f}')
-          wget.download(f, 'data/' + data_dir)
+        os.makedirs(local_file_path, exist_ok=True)
+        for file in files:
+          logging.info(f'Downloading file "{file_match}" from "{full_url}"')
+          wget.download(file, local_file_path)
       else:
-        logging.info(f'No file match with name "{files_m}" for stn/date "{full_uri}"')
+        logging.info(f'No file match with name "{file_match}" for stn/date "{full_url}"')
     else:
-      logging.info(f'File {files_m} already downloaded.')
+      logging.info(f'File "{file_match}" already downloaded.')
 
 
 if __name__ == '__main__':
