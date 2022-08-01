@@ -2,12 +2,13 @@
 
 from bs4 import BeautifulSoup
 import pandas as pd
+from os.path import exists
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
 stn = 'CXP'
 start_date = '2020-01-01'
-end_date = '2020-12-31'
+end_date = '2020-01-10'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 
@@ -54,15 +55,19 @@ def downloadFiles():
     error_message = 'No data from this date or invalid input stn/date'
     checkURL(full_uri, error_message)
 
-    files = listFD(full_uri, files_m)
-    if files != []:
-      data_dir = f'magnetometer/{stn}/{year}/'
-      makeDir(data_dir)
-      for f in files:
-        logging.info(f)
-        wget.download(f, 'data/' + data_dir)
+    full_file_path = f'{os.getcwd()}/data/magnetometer/{stn}/{year}/{files_m}'
+    if not exists(full_file_path):
+      files = listFD(full_uri, files_m)
+      if files != []:
+        data_dir = f'magnetometer/{stn}/{year}/'
+        makeDir(data_dir)
+        for f in files:
+          logging.info(f'downloading file {f}')
+          wget.download(f, 'data/' + data_dir)
+      else:
+        logging.info(f'No file match with name "{files_m}" for stn/date "{full_uri}"')
     else:
-      logging.info(f'No file match with name "{files_m}" for stn/date "{full_uri}"')
+      logging.info(f'File {files_m} already downloaded.')
 
 
 if __name__ == '__main__':
