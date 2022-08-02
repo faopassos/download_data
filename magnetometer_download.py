@@ -6,10 +6,10 @@ import requests, wget, os, urllib.request, urllib.error, logging
 
 
 stations = ['AFT', 'ARA', 'CBA', 'CHI', 'CXP', 'EUS', 'JAT', 'MAN','MED',
-            'PAL', 'PVE', 'RGA', 'SJC', 'SLZ', 'SMS', 'STM', 'VSS']
+            'PAL', 'PVE', 'RGA', 'SJC', 'SLZ', 'SMS', 'STM', 'TCM', 'VSS']
 
 start_date = '2019-01-01'
-end_date = '2019-01-10'
+end_date = '2019-01-03'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 
@@ -60,8 +60,11 @@ def downloadFiles():
         if files != []:
           os.makedirs(local_file_path, exist_ok=True)
           for file in files:
-            logging.info(f'Downloading file "{file_match}" from "{full_url}"')
-            wget.download(file, local_file_path)
+            try:
+              logging.info(f'Downloading file "{file_match}" from "{full_url}"')
+              wget.download(file, local_file_path)
+            except:
+              logging.info(f'Something went wrong with file "{file_match}". Please try again later.')
         else:
           logging.info(f'No file match with name "{file_match}" for stn/date "{full_url}"')
       else:
