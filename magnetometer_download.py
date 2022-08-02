@@ -5,9 +5,11 @@ import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-stn = 'RGA'
-start_date = '2020-01-01'
-end_date = '2020-01-03'
+stations = ['AFT', 'ARA', 'CBA', 'CHI', 'CXP', 'EUS', 'JAT', 'MAN','MED',
+            'PAL', 'PVE', 'RGA', 'SJC', 'SLZ', 'SMS', 'STM', 'VSS']
+
+start_date = '2019-01-01'
+end_date = '2019-01-10'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 
@@ -22,8 +24,8 @@ def checkURL(url):
     urllib.request.urlretrieve(url)
   except urllib.error.HTTPError as err:
     message = 'No data from this date or invalid input stn/date'
-    logging.info(f'{err} - {message}: "{url}"')
-    exit()
+    logging.info(f'{err.code} - {message}: "{url}"')
+    #exit()
 
 
 def returnRangeOfDates(start_date, end_date):
@@ -43,26 +45,27 @@ def listOfFiles(url, ext=''):
 
 
 def downloadFiles():
-  range_date = returnRangeOfDates(start_date, end_date)
-  for rd in range_date:
-    year = rd[0:4]
-    full_url = f'{url}{stn}/{year}/'
-    checkURL(full_url)
-    
-    file_match = f'{str(stn).lower()}{rd[6:8]}{rd[8:11]}.{rd[2:4]}m'
-    local_file_path = f'{os.getcwd()}/data/magnetometer/{stn}/{year}/'
+  for stn in stations:
+    range_date = returnRangeOfDates(start_date, end_date)
+    for rd in range_date:
+      year = rd[0:4]
+      full_url = f'{url}{stn}/{year}/'
+      checkURL(full_url)
+      
+      file_match = f'{str(stn).lower()}{rd[6:8]}{rd[8:11]}.{rd[2:4]}m'
+      local_file_path = f'{os.getcwd()}/data/magnetometer/{stn}/{year}/'
 
-    if not os.path.exists(local_file_path + file_match):
-      files = listOfFiles(full_url, file_match)
-      if files != []:
-        os.makedirs(local_file_path, exist_ok=True)
-        for file in files:
-          logging.info(f'Downloading file "{file_match}" from "{full_url}"')
-          wget.download(file, local_file_path)
+      if not os.path.exists(local_file_path + file_match):
+        files = listOfFiles(full_url, file_match)
+        if files != []:
+          os.makedirs(local_file_path, exist_ok=True)
+          for file in files:
+            logging.info(f'Downloading file "{file_match}" from "{full_url}"')
+            wget.download(file, local_file_path)
+        else:
+          logging.info(f'No file match with name "{file_match}" for stn/date "{full_url}"')
       else:
-        logging.info(f'No file match with name "{file_match}" for stn/date "{full_url}"')
-    else:
-      logging.info(f'File "{file_match}" already downloaded.')
+        logging.info(f'File "{file_match}" already downloaded.')
 
 
 if __name__ == '__main__':
