@@ -6,7 +6,7 @@ from datetime import datetime
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-stn = 'CAJ2M'
+stations = ['CAJ2M', 'CGK21']
 start_date = '2022-010'
 end_date = '2022-010'
 extensions = ['.SAO', '.PNG']
@@ -19,12 +19,13 @@ logging.basicConfig(
   datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
 )
 
-def checkURL(url, message):
+def checkURL(url):
   try:
     urllib.request.urlretrieve(url)
   except urllib.error.HTTPError as err:
-      logging.info(f'{err} - {message}: "{url}"')
-      exit()
+    message = 'No data from this date or invalid input stn/date'
+    logging.info(f'{err} - {message}: "{url}"')
+    #exit()
 
 
 def returnRangeOfDates(start_date, end_date, stn):
@@ -35,11 +36,6 @@ def returnRangeOfDates(start_date, end_date, stn):
   return full_uri
 
 
-def makeDir(path):
-  base_dir = os.getcwd()
-  os.makedirs(base_dir + '/data/' + path, exist_ok=True)
-
-
 def listFD(url, ext=''):
   page = requests.get(url).text
   soup = BeautifulSoup(page, 'html.parser')
@@ -47,21 +43,28 @@ def listFD(url, ext=''):
 
 
 def downloadFiles():
-  range_date = returnRangeOfDates(start_date, end_date, stn)
-  for day in range_date:
-    error_message = 'No data from this date or invalid input stn/date'
-    checkURL(url + day, error_message)
+  for stn in stations:
+    range_date = returnRangeOfDates(start_date, end_date, stn)
+    for rd in range_date:
+      checkURL(url + rd)
 
-    for ext in extensions:
-      files = listFD(url + day, ext)
-      if files != []:
-        data_dir = f'ionossonde/{day}'
-        makeDir(data_dir)
-        for f in files:
-          logging.info(f)
-          wget.download(f, 'data/' + data_dir)  
-      else:
-        logging.info(f'No file match with extension "{ext}" for stn/date "{day}"')
+      for ext in extensions:
+        files = listFD(url + rd, ext)
+        if files != []:
+          local_file_path = f'{os.getcwd()}/data/ionosonde/' + rd
+          os.makedirs(local_file_path, exist_ok=True)
+          for file in files:
+            file_exists = file.rsplit('/', 1)[1]
+            if not os.path.exists(local_file_path + file_exists):
+              try:
+                logging.info(f'Downloading file {file}')
+                wget.download(file, local_file_path)
+              except:
+                logging.info(f'Something went wrong with file "{file}". Please try again later.')
+            else:
+              logging.info(f'File "{file_exists}" already downloaded.') 
+        else:
+          logging.info(f'No file match with extension "{ext}" for stn/date "{rd}"')
 
 
 if __name__ == '__main__':
