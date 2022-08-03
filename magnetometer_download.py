@@ -5,11 +5,13 @@ import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-stations = ['ALF', 'ARA', 'CBA', 'CHI', 'CXP', 'EUS', 'JAT', 'MAN','MED',
-            'PAL', 'PVE', 'RGA', 'SJC', 'SLZ', 'SMS', 'STM', 'TCM', 'VSS']
+#stations = ['ALF', 'ARA', 'CBA', 'CHI', 'CXP', 'EUS', 'JAT', 'MAN','MED',
+#            'PAL', 'PVE', 'RGA', 'SJC', 'SLZ', 'SMS', 'STM', 'TCM', 'VSS']
 
-start_date = '2019-01-01'
-end_date = '2019-12-31'
+stations = ['ALF', 'ARA', 'CBA']
+
+start_date = '2015-01-01'
+end_date = '2015-01-10'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 

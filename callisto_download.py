@@ -5,8 +5,8 @@ import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-start_date = '2022-01-25'
-end_date = '2022-01-31'
+start_date = '2022-02-01'
+end_date = '2022-02-01'
 
 url = 'https://embracedata.inpe.br/callisto/'
 
@@ -16,23 +16,19 @@ logging.basicConfig(
   datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
 )
 
-def checkURL(url, message):
+def checkURL(url):
   try:
     urllib.request.urlretrieve(url)
   except urllib.error.HTTPError as err:
+      message = 'No data from this date or invalid input stn/date'
       logging.info(f'{err} - {message}: "{url}"')
-      exit()
+      #exit()
 
 
 def returnRangeOfDates(start_date, end_date):
   range_date = pd.date_range(start=start_date, end=end_date)
   full_uri = range_date.strftime('%Y-%m-%d')
   return full_uri
-
-
-def makeDir(path):
-  base_dir = os.getcwd()
-  os.makedirs(base_dir + '/data/' + path, exist_ok=True)
 
 
 def listFD(url, ext_len, ext=''):
@@ -43,26 +39,31 @@ def listFD(url, ext_len, ext=''):
 
 def downloadFiles():
   range_date = returnRangeOfDates(start_date, end_date)
-  for day in range_date:
-    year_m = day[0:4]
-    month_m = day[5:7]
-    day_m = day[8:10]
-    dir_m = f'CXP/{year_m}/{month_m}/'
-    url_m = url + dir_m
-    file_match = f'INPE_{year_m}{month_m}{day_m}'
+  for rd in range_date:
+    year = rd[0:4]
+    month = rd[5:7]
+    remote_dir = f'CXP/{year}/{month}/'
+    full_url = url + remote_dir
+    file_match = f'INPE_{year}{month}{rd[8:10]}'
 
-    error_message = 'No data from this date or invalid input stn/date'
-    checkURL(url_m, error_message)
+    checkURL(full_url)
 
-    files = listFD(url_m, len(file_match), file_match)
+    files = listFD(full_url, len(file_match), file_match)
     if files != []:
-      data_dir = f'callisto/{dir_m}'
-      makeDir(data_dir)
-      for f in files:
-        logging.info(f)
-        wget.download(f, 'data/' + data_dir)
+      local_file_path = f'{os.getcwd()}/data/callisto/' + remote_dir
+      os.makedirs(local_file_path, exist_ok=True)
+      for file in files:
+        file_exists = file.rsplit('/', 1)[1]
+        if not os.path.exists(local_file_path + file_exists):
+          try:
+            logging.info(f'Downloading {file}')
+            wget.download(file, local_file_path)
+          except:
+            logging.info(f'Something went wrong with file "{file}". Please try again later.')
+        else:
+          logging.info(f'File "{file_exists}" already downloaded.')
     else:
-      logging.info(f'No files match with "{file_match}" for stn/date "{dir_m}"')
+      logging.info(f'No files match with "{file_match}" for stn/date "{remote_dir}"')
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ import requests, wget, os, urllib.request, urllib.error, logging
 stations = ['ALF', 'ARA', 'RGA']
 
 start_date = '2019-01'
-end_date = '2019-02'
+end_date = '2019-03'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 

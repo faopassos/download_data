@@ -1,16 +1,10 @@
 #!/usr/bin/python3
-import urllib.request
-import urllib.error
+
+url = ['https://embracedata.inpe.br/callisto/CXP/2022/02/INPE_20220201_194457_59.fit',
+      'https://embracedata.inpe.br/callisto/CXP/2022/02/INPE_20220201_194457_59.fit',
+      'https://embracedata.inpe.br/callisto/CXP/2022/02/INPE_20220201_194457_59.fit']
 
 
-def checkURL(url, message):
-    try:
-        urllib.request.urlretrieve(url)
-    except urllib.error.HTTPError as err:
-        print(f'{err} - {message}')
-        exit()
-
-
-#url = 'https://embracedata.inpe.br/imager/CP/2021/CP_2021_011800/'
-#error_message = 'No data from this date or invalid date.'
-#print(checkURL(url, error_message))
+for u in url:
+    res = u.rsplit('/', 1)[1]
+    print(res)
