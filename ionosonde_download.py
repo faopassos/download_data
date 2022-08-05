@@ -6,10 +6,10 @@ from datetime import datetime
 import requests, wget, os, urllib.request, urllib.error, logging
 
 
-stations = ['CAJ2M', 'CGK21']
-start_date = '2022-010'
-end_date = '2022-010'
-extensions = ['.SAO', '.PNG']
+stations = ['BVJ03']
+start_date = '2019-136'
+end_date = '2019-136'
+extensions = ['.SAO', '.PNG', '.RSF', 'DFT', 'SKY', 'DVL']
 
 url = 'https://embracedata.inpe.br/ionosonde/'
 
