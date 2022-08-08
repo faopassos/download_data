@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
 
-
+#Range of dates - YYYY-MM-DD
 start_date = '2022-02-01'
 end_date = '2022-02-01'
 

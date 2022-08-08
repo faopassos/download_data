@@ -4,14 +4,14 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
 
-
+# all available stations:
 #stations = ['ALF', 'ARA', 'CBA', 'CHI', 'CXP', 'EUS', 'JAT', 'MAN','MED',
 #            'PAL', 'PVE', 'RGA', 'SJC', 'SLZ', 'SMS', 'STM', 'TCM', 'VSS']
-
 stations = ['ALF', 'ARA', 'CBA']
 
+#Range of dates - YYYY-MM-DD
 start_date = '2015-01-01'
-end_date = '2015-01-10'
+end_date = '2015-01-03'
 
 url = 'https://embracedata.inpe.br/magnetometer/'
 

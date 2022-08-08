@@ -5,11 +5,17 @@ import pandas as pd
 from datetime import datetime
 import requests, wget, os, urllib.request, urllib.error, logging
 
+# all available stations:
+#stations = ['BLJ03', 'BVJ03', 'CAJ2M', 'CGK21', 'FZA0M', 'SAA0K', 'SMK29']
+stations = ['BLJ03', 'SAA0K']
 
-stations = ['BVJ03']
-start_date = '2019-136'
-end_date = '2019-136'
-extensions = ['.SAO', '.PNG', '.RSF', 'DFT', 'SKY', 'DVL']
+#Range of dates - YYYY-DOY
+start_date = '2020-010'
+end_date = '2020-010'
+
+# all available extensions:
+#extensions = ['.RSF', '.SAO', '.PNG', '.DFT', '.DVL', '.SKY' 'SAO.XML']
+extensions = ['.SAO', '.PNG', 'SAO.XML']
 
 url = 'https://embracedata.inpe.br/ionosonde/'
 
