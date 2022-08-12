@@ -20,9 +20,9 @@ def checkURL(url):
   try:
     urllib.request.urlretrieve(url)
   except urllib.error.HTTPError as err:
-      message = 'No data from this date or invalid input stn/date'
-      logging.info(f'{err} - {message}: "{url}"')
-      #exit()
+    message = 'No data from this date or invalid input stn/date'
+    logging.info(f'{err} - {message}: "{url}"')
+    #exit()
 
 
 def returnRangeOfDates(start_date, end_date):
