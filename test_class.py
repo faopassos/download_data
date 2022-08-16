@@ -18,6 +18,18 @@ class EmbraceData:
     datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO
     )
 
+  def listFiles(self, instrument, url, ext_len=0, ext=''):
+    page = requests.get(url).text
+    soup = BeautifulSoup(page, 'html.parser')
+    if instrument == 'callisto':
+      return [url + node.get('href') for node in soup.find_all('a') if node.get('href').startswith(ext, 0, ext_len)]
+    elif instrument == 'imager':
+      return [url + node.get('href') for node in soup.find_all('a') if node.get('href').startswith(ext, 0, ext_len)]
+    if instrument == 'ionosonde':
+      return [url + node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
+    if instrument == 'magnetometer':
+      return [url + node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
+
   def checkURL(self, url):
       try:
         urllib.request.urlretrieve(url)
