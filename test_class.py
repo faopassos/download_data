@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from subprocess import call
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests, wget, os, urllib.request, urllib.error, logging
@@ -39,5 +40,7 @@ class EmbraceData:
     #info = f'{base_url}{self.instrument}/ {self.start_date} {self.end_date}'
     #if self.instrument == 'callisto':
 
-ist = EmbraceData('callisto', '2022-01-01', '2022-01-10')
-ist.getCallisto()
+download = EmbraceData('callisto', '2022-01-01', '2022-01-03')
+download.getCallisto()
+#ist = EmbraceData('callisto', '2022-01-01', '2022-01-10')
+#ist.getCallisto()
