@@ -44,7 +44,6 @@ class Embrace_Data:
     elif instrument == 'ionosonde' or instrument == 'magnetometer':
       return [url + node.get('href') for node in soup.find_all('a') if node.get('href').endswith(ext)]
 
-
   def Callisto(self, start_date, end_date):
     range_date = self.returnRangeOfDates('callisto', start_date, end_date)
     for rd in range_date:
@@ -73,9 +72,7 @@ class Embrace_Data:
     else:
       logging.info(f'No files match with "{file_match}" for stn/date "{uri}"')
 
-  def Imager(self, start_date, end_date):
-    stations = ['CA', 'CP']
-    filters = ['O6-DARK']
+  def Imager(self, start_date, end_date, stations, filters):
     for stn in stations:
       range_date = self.returnRangeOfDates('imager', start_date, end_date)
       for rd in range_date:
@@ -102,9 +99,7 @@ class Embrace_Data:
           else:
             logging.info(f'No file match with filter "{ft}" for stn/date "{uri}"')
 
-  def Ionosonde(self, start_date, end_date):
-    stations = ['BLJ03']
-    extensions = ['.SAO']
+  def Ionosonde(self, start_date, end_date, stations, extensions):
     for stn in stations:
       range_date = self.returnRangeOfDates('ionosonde', start_date, end_date)
       for rd in range_date:
@@ -131,8 +126,7 @@ class Embrace_Data:
           else:
             logging.info(f'No file match with extension "{ext}" for stn/date "{uri}"')
 
-  def Magnetometer(self, start_date, end_date):
-    stations = ['ALF']
+  def Magnetometer(self, start_date, end_date, stations):
     for stn in stations:
       range_date = self.returnRangeOfDates('magnetometer', start_date, end_date)
       for rd in range_date:
@@ -158,9 +152,3 @@ class Embrace_Data:
             logging.info(f'No file match with name "{file_match}" for stn/date "{full_url}"')
         else:
           logging.info(f'File "{file_match}" already downloaded.')
-
-download = Embrace_Data()
-download.Callisto('2022-01-31', '2022-01-31')
-download.Imager('2022-03-01', '2022-03-01')
-download.Ionosonde('2020-036', '2020-036')
-download.Magnetometer('2015-01-01', '2015-01-01')
