@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import embracedata_download
 
 
@@ -17,22 +16,22 @@ IMAGER = {
 IONOSONDE = {
   'start_date': '2020-036',
   'end_date': '2020-036',
-  'stations': ['BLJ03', 'SAA0K'],
-  'extensions': ['.SAO', '.RSF']
+  'stations': ['BLJ03'],
+  'extensions': ['.SAO']
 }
 
 MAGNETOMETER = {
   'start_date': '2022-01-01',
-  'end_date': '2022-01-10',
-  'stations': ['ALF', 'ARA', 'CBA']
+  'end_date': '2022-01-02',
+  'stations': ['ALF', 'ARA']
 }
 
 def download_Files():
   get_data = embracedata_download.Embrace_Data()
-  #get_data.Callisto(CALLISTO['start_date'], CALLISTO['end_date'])
-  get_data.Imager(IMAGER['start_date'], IMAGER['end_date'], IMAGER['stations'], IMAGER['filters'])
-  #get_data.Ionosonde(IONOSONDE['start_date'], IONOSONDE['end_date'], IONOSONDE['stations'], IONOSONDE['extensions'])
-  #get_data.Magnetometer(MAGNETOMETER['start_date'], MAGNETOMETER['end_date'], MAGNETOMETER['stations'])
+  get_data.Callisto(**CALLISTO)
+  get_data.Imager(**IMAGER)
+  get_data.Ionosonde(**IONOSONDE)
+  get_data.Magnetometer(**MAGNETOMETER)
 
 if __name__ == '__main__':
   download_Files()
