@@ -21,7 +21,17 @@ class Embrace_Data:
         message = 'No data from this date or invalid input stn/date'
         logging.info(f'{err} - {message}: "{url}"')
 
-  def returnRangeOfDates(self, instrument, start_date, end_date):  
+  def returnRangeOfDates(self, instrument, start_date, end_date):
+      if instrument == 'callisto' or instrument == 'imager' or instrument == 'magnetometer':
+        s_date = datetime.strptime(start_date, '%Y-%m-%d').day
+        e_date = datetime.strptime(end_date, '%Y-%m-%d').day
+      elif instrument == 'ionosonde':
+        s_date = datetime.strptime(start_date, '%Y-%j').day
+        e_date = datetime.strptime(end_date, '%Y-%j').day
+      print(s_date - e_date)
+      if (s_date - e_date) > 0:
+        logging.info(f'First date greater than second date! Your entry dates:\n{start_date}\n{end_date}')
+        exit()
       try:
         if instrument == 'callisto' or instrument == 'imager':
           range_date = pd.date_range(start=start_date, end=end_date).strftime('%Y-%m-%d')
@@ -33,7 +43,8 @@ class Embrace_Data:
           range_date = pd.date_range(start=start_date, end=end_date).strftime('%Y%m%d%b')
         return range_date
       except:
-        logging.info(f'Invalid date/range of dates!\n\nYour entry dates:\n{start_date}\n{end_date}')
+        logging.info(f'Invalid format of dates!\n\nYour entry dates:\n{start_date}\n{end_date}')
+        exit()
 
   def listFiles(self, instrument, url, ext='', ext_len=0):
     page = requests.get(url).text
@@ -51,25 +62,24 @@ class Embrace_Data:
       uri = f'callisto/CXP/{year}/{month}/'
       full_url = self.base_url + uri
       file_match = f'INPE_{year}{month}{rd[8:10]}'
+      self.checkURL(full_url)
 
-    self.checkURL(full_url)
-
-    files = self.listFiles('callisto', full_url, file_match, len(file_match))
-    if files != []:
-      local_file_path = f'{os.getcwd()}/data/' + uri
-      os.makedirs(local_file_path, exist_ok=True)
-      for file in files:
-        file_exists = file.rsplit('/', 1)[1]
-        if not os.path.exists(local_file_path + file_exists):
-          try:
-            logging.info(f'Downloading {file}')
-            wget.download(file, local_file_path)
-          except:
-            logging.info(f'Something went wrong with file "{file}". Please try again later.')
-        else:
-          logging.info(f'File "{file_exists}" already downloaded.')
-    else:
-      logging.info(f'No files match with "{file_match}" for stn/date "{uri}"')
+      files = self.listFiles('callisto', full_url, file_match, len(file_match))
+      if files != []:
+        local_file_path = f'{os.getcwd()}/data/' + uri
+        os.makedirs(local_file_path, exist_ok=True)
+        for file in files:
+          file_exists = file.rsplit('/', 1)[1]
+          if not os.path.exists(local_file_path + file_exists):
+            try:
+              logging.info(f'Downloading {file}')
+              wget.download(file, local_file_path)
+            except:
+              logging.info(f'Something went wrong with file "{file}". Please try again later.')
+          else:
+            logging.info(f'File "{file_exists}" already downloaded.')
+      else:
+        logging.info(f'No files match with "{file_match}" for stn/date "{uri}"')
 
   def Imager(self, start_date, end_date, stations, filters):
     for stn in stations:
