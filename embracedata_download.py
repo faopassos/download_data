@@ -22,29 +22,27 @@ class Embrace_Data:
         logging.info(f'{err} - {message}: "{url}"')
 
   def returnRangeOfDates(self, instrument, start_date, end_date):
+    try:
       if instrument == 'callisto' or instrument == 'imager' or instrument == 'magnetometer':
-        s_date = datetime.strptime(start_date, '%Y-%m-%d').day
-        e_date = datetime.strptime(end_date, '%Y-%m-%d').day
+        s_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        e_date = datetime.strptime(end_date, '%Y-%m-%d').date()
       elif instrument == 'ionosonde':
-        s_date = datetime.strptime(start_date, '%Y-%j').day
-        e_date = datetime.strptime(end_date, '%Y-%j').day
-      print(s_date - e_date)
-      if (s_date - e_date) > 0:
-        logging.info(f'First date greater than second date! Your entry dates:\n{start_date}\n{end_date}')
+        s_date = datetime.strptime(start_date, '%Y-%j').date()
+        e_date = datetime.strptime(end_date, '%Y-%j').date()
+      if (s_date > e_date):
         exit()
-      try:
-        if instrument == 'callisto' or instrument == 'imager':
-          range_date = pd.date_range(start=start_date, end=end_date).strftime('%Y-%m-%d')
-        elif instrument == 'ionosonde':
-          range_s = datetime.strptime(start_date, '%Y-%j').strftime("%Y-%m-%d")
-          range_e = datetime.strptime(end_date, '%Y-%j').strftime("%Y-%m-%d")
-          range_date = pd.date_range(start=range_s, end=range_e).strftime('%Y-%j')
-        elif instrument == 'magnetometer':
-          range_date = pd.date_range(start=start_date, end=end_date).strftime('%Y%m%d%b')
-        return range_date
-      except:
-        logging.info(f'Invalid format of dates!\n\nYour entry dates:\n{start_date}\n{end_date}')
-        exit()
+      if instrument == 'callisto' or instrument == 'imager':
+        range_date = pd.date_range(start=start_date, end=end_date).strftime('%Y-%m-%d')
+      elif instrument == 'ionosonde':
+        range_s = datetime.strptime(start_date, '%Y-%j').strftime("%Y-%m-%d")
+        range_e = datetime.strptime(end_date, '%Y-%j').strftime("%Y-%m-%d")
+        range_date = pd.date_range(start=range_s, end=range_e).strftime('%Y-%j')
+      elif instrument == 'magnetometer':
+        range_date = pd.date_range(start=start_date, end=end_date).strftime('%Y%m%d%b')
+      return range_date
+    except:
+      logging.info(f'Invalid date or start date is great than end date.\nYour entry dates:\n{start_date}\n{end_date}')
+      exit()
 
   def listFiles(self, instrument, url, ext='', ext_len=0):
     page = requests.get(url).text
