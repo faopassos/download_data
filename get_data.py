@@ -35,7 +35,7 @@ MAGNETOMETER = {
 SCINTILLATION = {
   'start_date': '2021-046',
   'end_date': '2021-047',
-  'stations': ['imp', 'ios']
+  'stations': ['imp', 'ios', 'sjk']
 }
 
 def download_Files():
