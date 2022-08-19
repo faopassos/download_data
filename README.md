@@ -1,5 +1,17 @@
 # Downloading files from Space Weather Repository
 
+Need Python >= 3.6.10 to work
+
+Clone repository in https....
+
+Install packeges
+pip3 install -r requirements.txt
+
+Change input data in get_data.py and unconment instrument to download data
+a folder will be created in te base dir of project with tree bellow:
+data/instrument/year/stn/ etc
+
+
 input format / stations / filters:
 
 - CALLISTO:
