@@ -1,4 +1,4 @@
-import embracedata_download
+from download_embracedata import Embrace_Data
 
 
 CALLISTO = { 
@@ -7,10 +7,10 @@ CALLISTO = {
 }
 
 IMAGER = {
-  'start_date': '2022-01-29',
-  'end_date': '2022-01-31',
-  'stations': ['CA', 'CP'],
-  'filters': ['O6-DARK', 'OH-DARK']
+  'start_date': '2022-08-01',
+  'end_date': '2022-08-10',
+  'stations': ['CF'],
+  'filters': ['O6', 'OH']
 }
 
 IONOSONDE = {
@@ -39,13 +39,13 @@ SCINTILLATION = {
 }
 
 def download_Files():
-  get_data = embracedata_download.Embrace_Data()
+  get_data = Embrace_Data()
   #get_data.Callisto(**CALLISTO)
-  #get_data.Imager(**IMAGER)
+  get_data.Imager(**IMAGER)
   #get_data.Ionosonde(**IONOSONDE)
   #get_data.Lidar(**LIDAR)
   #get_data.Magnetometer(**MAGNETOMETER)
-  get_data.Scintillation(**SCINTILLATION)
+  #get_data.Scintillation(**SCINTILLATION)
 
 if __name__ == '__main__':
   download_Files()
