@@ -38,8 +38,9 @@ SCINTILLATION = {
   'stations': ['imp', 'ios', 'sjk']
 }
 
+get_data = Embrace_Data()
+
 def download_Files():
-  get_data = Embrace_Data()
   #get_data.Callisto(**CALLISTO)
   get_data.Imager(**IMAGER)
   #get_data.Ionosonde(**IONOSONDE)
