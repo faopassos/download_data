@@ -1,8 +1,7 @@
 from bs4 import BeautifulSoup
 import pandas as pd
-import glob
 from datetime import datetime
-import requests, wget, os, urllib.request, urllib.error, logging, ssl
+import requests, wget, os, urllib.request, urllib.error, logging, ssl, urllib3, warnings
 
 
 class Embrace_Data:
@@ -16,7 +15,8 @@ class Embrace_Data:
     )
 
     ssl._create_default_https_context = ssl._create_unverified_context
-
+    warnings.filterwarnings("ignore", category=urllib3.exceptions.InsecureRequestWarning)
+  
   def checkURL(self, url):
       try:
         urllib.request.urlretrieve(url)
@@ -74,7 +74,7 @@ class Embrace_Data:
           if not os.path.exists(local_file_path + file_exists):
             try:
               logging.info(f'Downloading {file}')
-              wget.download(file, local_file_path)
+              wget.download(file, local_file_path, bar=None)
             except:
               logging.info(f'Something went wrong with file "{file}". Please try again later.')
           else:
@@ -101,7 +101,7 @@ class Embrace_Data:
               if not os.path.exists(local_file_path + file_exists):
                 try:
                   logging.info(f'Downloading file {file}')
-                  wget.download(file, local_file_path)
+                  wget.download(file, local_file_path, bar=None)
                 except:
                   logging.info(f'Something went wrong with file "{file}". Please try again later.')
               else:
@@ -128,7 +128,7 @@ class Embrace_Data:
               if not os.path.exists(local_file_path + file_exists):
                 try:
                   logging.info(f'Downloading file {file}')
-                  wget.download(file, local_file_path)
+                  wget.download(file, local_file_path, bar=None)
                 except:
                   logging.info(f'Something went wrong with file "{file}". Please try again later.')
               else:
@@ -157,7 +157,7 @@ class Embrace_Data:
             if not os.path.exists(local_file_path + file_exists):
               try:
                 logging.info(f'Downloading {file}')
-                wget.download(file, local_file_path)
+                wget.download(file, local_file_path, bar=None)
               except:
                 logging.info(f'Something went wrong with file "{file}". Please try again later.')
             else:
@@ -184,37 +184,13 @@ class Embrace_Data:
             for file in files:
               try:
                 logging.info(f'Downloading file "{file_match}" from "{full_url}"')
-                wget.download(file, local_file_path)
+                wget.download(file, local_file_path, bar=None)
               except:
                 logging.info(f'Something went wrong with file "{file_match}". Please try again later.')
           else:
             logging.info(f'No file match with name "{file_match}" for stn/date "{full_url}"')
         else:
           logging.info(f'File "{file_match}" already downloaded.')
-
-  def MagnetometerSeg(self, start_date, end_date, stations):
-    for stn in stations:
-        range_date = self.returnRangeOfDates('magnetometer', start_date, end_date)
-        for rd in range_date:
-            year = rd[0:4]
-            uri = f'magnetometer/.dataseg/{stn}/{year}/'
-            full_url = self.base_url + uri
-            self.checkURL(full_url)
-            
-            file_match = f"{stn}*.zip"
-            local_file_path = f'{os.getcwd()}/data/magnetometer/dataseg/{stn}/{year}/'
-            files = self.listFiles('magnetometer', full_url, file_match)
-            
-            if files:
-                os.makedirs(local_file_path, exist_ok=True)
-                for file in files:
-                    try:
-                        logging.info(f'Downloading file "{file}" from "{full_url}"')
-                        wget.download(file, local_file_path)
-                    except Exception as e:
-                        logging.info(f'Something went wrong with file "{file}". Please try again later. Error: {e}')
-            else:
-                logging.info(f'No file match with name "{file_match}" for stn/date "{full_url}"')
 
   def Scintillation(self, start_date, end_date, stations):
     for stn in stations:
@@ -238,7 +214,7 @@ class Embrace_Data:
             if not os.path.exists(local_file_path + file_exists):
               try:
                 logging.info(f'Downloading file {file}')
-                wget.download(file, local_file_path)
+                wget.download(file, local_file_path, bar=None)
               except:
                 logging.info(f'Something went wrong with file "{file}". Please try again later.')
             else:

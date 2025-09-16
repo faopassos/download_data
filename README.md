@@ -16,21 +16,19 @@ After install check your version:
 $ python3 -V
 $ Python 3.8.10
 ```
-Clone Embrace Data Repository from github with git:
+Clone repository from github with git:
 ```sh
-$ git clone https://github.com/embrace-inpe/download_embracedata
+$ git clone https://github.com/faopassos/download_data
 ```
-Or download compress file (zip) in link https://github.com/embrace-inpe/download_embracedata/archive/refs/heads/master.zip
 
 After this enter in project folder and install dependencies with pip3 command:
 ```sh
 pip3 install -r requirements.txt
 ```
-After installing dependencies you should execute the script called “get_data.py” that is inside the folder that was made download “download_embracedata-master”.
+After installing dependencies you should execute the script called “main.py”.
 
-The script “get_data.py” is the only one that needs to change to download data. The first part that is necessary to edit are the range of date, stations, filters and the extensions. Each 
-instrument has a particularity.
-
+The script “main.py” is the only one that needs to run to download data. 
+The first part that is necessary to edit(config.json) are the range of date, stations, filters and the extensions. Each instrument has a particularity.
 Modify just the instrument you want to download data, leave others in the same way.
 
 Follow the example each instrument:
@@ -140,73 +138,13 @@ SCINTILLATION = {
 It is possible find the day of year in this page: https://www.calendario-365.com.br/numeros-dos-dias/2021.html
 
 
-The second part that need to modify is the final do file, follow: 
+The second part that need to modify is the final os line in commando line, follow: 
 
-```python
-...
-def download_Files():
-  get_data.Callisto(**CALLISTO)
-  get_data.Imager(**IMAGER)
-  get_data.Ionosonde(**IONOSONDE)
-  get_data.Lidar(**LIDAR)
-  get_data.Magnetometer(**MAGNETOMETER)
-  get_data.Scintillation(**SCINTILLATION)
-  ...
-```
-Each line begins with “get_data.instrument” to refer to a specific instrument. For examples:
-```text
- get_data.Callisto(**CALLISTO) - make download data of Callisto
- get_data.Imager(**IMAGER) - make download data of Imageador
- get_data.Ionosonde(**IONOSONDE) - make download data of Ionosonde
- get_data.Lidar(**LIDAR) - make download data of data Lidar
- get_data.Magnetometer(**MAGNETOMETER) - make download data of Magnetometer
- get_data.Scintillation(**SCINTILLATION) - make download data of Scintillation.
-```
-You need to uncomment the line of instruments you want to download and make a comment in front of the line of the instruments that you will not download. The # character that is used to make comments.
-
-The example below, the script will download data from Callisto and Imager and ignore the others. 
-
-```python
-...
-def download_Files():
-  get_data.Callisto(**CALLISTO)
-  get_data.Imager(**IMAGER)
-  #get_data.Ionosonde(**IONOSONDE)
-  #get_data.Lidar(**LIDAR)
-  #get_data.Magnetometer(**MAGNETOMETER)
-  #get_data.Scintillation(**SCINTILLATION)
-...
-```
-Running script:
+Running script (magnetometer example):
 ```sh
-python3 get_data.py
+python3 ./main.py magnetometer
 ```
 After running the script a log file with name "download_embracedata.log" and data dir with name "data" will be created in project dir.
 
-Output log informations is describe bellow:
-
-File download:
-```sh
-2022-08-19 17:11:09,INFO - Downloading file "ara03feb.22m" from "https://embracedata.inpe.br/magnetometer/ARA/2022/"
-```
-File already download and will not downloaded again:
-```sh
-2022-08-22 11:00:37,INFO - File "ara05feb.22m" already downloaded.
-```
-No file from specific date:
-```sh
-2022-08-19 17:11:08,INFO - No file match with name "alf05feb.22m" for stn/date "https://embracedata.inpe.br/magnetometer/ALF/2022/"
-```
-No folder match in embracedata repository. In this case no have data from ALF station of year 2022:
-```sh
-2022-08-19 17:11:06,INFO - HTTP Error 404: Not Found - No data from this date or invalid input stn/date: "https://embracedata.inpe.br/magnetometer/ALF/2022/"
-```
-Invalid date or wrong input range of dates. In this case the range of dates is wrong:
-```sh
-2022-08-22 10:59:04,INFO - Invalid date or start date is great than end date.
-Your entry dates:
-2022-02-29
-2022-01-31
-```
 ## License
 MIT
