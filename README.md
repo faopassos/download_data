@@ -1,7 +1,6 @@
 # Downloading files from Space Weather Repository
-[![](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/embrace-inpe/download_embracedata/blob/master/LICENSE)
 [![](https://img.shields.io/badge/python-3-blue.svg)](https://www.python.org/)
-[![](https://img.shields.io/badge/Version-1.0-yellow.svg)](https://github.com/embrace-inpe/download_embracedata)
+[![](https://img.shields.io/badge/Version-1.0-yellow.svg)](https://github.com/faopassos/download_data)
 [![](https://img.shields.io/badge/INPE-EMBRACE-orange.svg)](http://www2.inpe.br/climaespacial/portal/pt/)
 
 This software download data from Embrace repository available in https://embracedata.inpe.br
@@ -145,6 +144,3 @@ Running script (magnetometer example):
 python3 ./main.py magnetometer
 ```
 After running the script a log file with name "download_embracedata.log" and data dir with name "data" will be created in project dir.
-
-## License
-MIT
