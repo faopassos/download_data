@@ -1,0 +1,44 @@
+{
+  "CALLISTO": { 
+    "start_date": "2022-01-15",
+    "end_date": "2022-01-31"
+  },
+
+  "IMAGER": {
+    "start_date": "2022-08-01",
+    "end_date": "2022-08-10",
+    "stations": ["CF"],
+    "filters": ["O6", "OH"]
+  },
+
+  "IONOSONDE": {
+    "start_date": "2020-035",
+    "end_date": "2020-036",
+    "stations": ["BLJ03"],
+    "extensions": [".SAO"]
+  },
+
+  "LIDAR": {
+    "start_date": "2022-07-28",
+    "end_date": "2022-07-30",
+    "elements": ["Potassium", "Sodium"]
+  },
+
+  "MAGNETOMETER": {
+    "start_date": "2022-01-01",
+    "end_date": "2022-01-31",
+    "stations": ["CXP", "SJC"]
+  },
+
+  "MAGNETOMETER_SEG": {
+    "start_date": "2022-01-01",
+    "end_date": "2022-12-31",
+    "stations": ["cxp", "sjc"]
+  },
+
+  "SCINTILLATION": {
+    "start_date": "2021-046",
+    "end_date": "2021-047",
+    "stations": ["imp", "ios", "sjk"]
+  }
+}
